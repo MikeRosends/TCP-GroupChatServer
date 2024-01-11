@@ -1,3 +1,3 @@
 # TCP-GroupChatServer
 
-A basic groupchat server where it registers your username for the session
+Host your groupchat server where clients can join and choose a username for the session
