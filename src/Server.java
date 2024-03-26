@@ -90,7 +90,7 @@ public class Server {
 
                 System.out.println(clientText);
 
-                //receive and print data from client
+                //receive and print text from client
                 while (clientText != null) {
 
                     if (clientText.equals("/quit")) {
@@ -101,7 +101,7 @@ public class Server {
                         break;
                     }
 
-                    //Prints Clients text
+                    //Prints clients text to the console
                     clientText = input.readLine();
                     System.out.println(clientName + " --> " + clientText);
 
@@ -111,7 +111,8 @@ public class Server {
                             if (clientText.equals("/quit")) {
                                 break;
                             } else {
-                                client.println(clientName + " --> " + clientText);
+                                client.println(clientName + " => " + clientText);
+                                System.out.println();
                             }
                         }
                     }
