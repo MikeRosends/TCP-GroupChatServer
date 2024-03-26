@@ -42,26 +42,27 @@ public class Server {
             if (isClientReady.equals("n")) {
                 begoneTextOut.println("Begone Then...");
 
+            } else if (isClientReady.equals("y")) {
+                nameOut.println("Please enter your name: ");
+                String clientName = nameIn.readLine();
 
+                for (PrintWriter client : clients) {
+                    client.println(clientName + " Joined");
+                }
+
+
+                Handler clientHandler = new Handler(clientSocket, clientName);
+                pool.submit(clientHandler);
+
+                //Opening message
+                PrintWriter openingMessage = new PrintWriter(clientSocket.getOutputStream(), true);
+                synchronized (clients) {
+                    clients.add(openingMessage);
+                    openingMessage.println("=-=-=-=-=-=-=-=-=-=-=-=-\nWELCOOOMEEE " + clientName + "\nTo exit type: /quit\n=-=-=-=-=-=-=-=-=-=-=-=-");
+                }
             }
 
-            nameOut.println("Please enter your name: ");
-            String clientName = nameIn.readLine();
 
-            for (PrintWriter client : clients) {
-                client.println(clientName + " Joined");
-            }
-
-
-            Handler clientHandler = new Handler(clientSocket, clientName);
-            pool.submit(clientHandler);
-
-            //Opening message
-            PrintWriter openingMessage = new PrintWriter(clientSocket.getOutputStream(), true);
-            synchronized (clients) {
-                clients.add(openingMessage);
-                openingMessage.println("=-=-=-=-=-=-=-=-=-=-=-=-\nWELCOOOMEEE " + clientName + "\nTo exit type: /quit\n=-=-=-=-=-=-=-=-=-=-=-=-");
-            }
 
 
         }
