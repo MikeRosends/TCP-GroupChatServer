@@ -26,15 +26,22 @@ public class Server {
             Socket clientSocket = serverSocket.accept();
             System.out.println("New Connection" + clientSocket.getInetAddress());
 
-            //Ask ans store clients name
+            //Ask for and store clients name
             BufferedReader nameIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             BufferedReader rUReadyIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter rUReadyOut = new PrintWriter(clientSocket.getOutputStream(), true);
             PrintWriter nameOut = new PrintWriter(clientSocket.getOutputStream(), true);
+            PrintWriter begoneTextOut = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            rUReadyOut.println("You Have To Chose a Username...\nIt Will Be Your Username FOREVER...\n--------------------------\nAre You Ready? [n/y]\n--------------------------");
+            rUReadyOut.println("You Have To Chose a Username...\n" +
+                    "It Will Be Your Username FOREVER...\n" +
+                    "--------------------------\n" +
+                    "Are You Ready? [n/y]\n" +
+                    "--------------------------");
             String isClientReady = rUReadyIn.readLine();
             if (isClientReady.equals("n")) {
+                begoneTextOut.println("Begone Then...");
+
 
             }
 
@@ -53,7 +60,7 @@ public class Server {
             PrintWriter openingMessage = new PrintWriter(clientSocket.getOutputStream(), true);
             synchronized (clients) {
                 clients.add(openingMessage);
-                openingMessage.println("=-=-=-=-=-=-=-=-=-=-=-=-\nWELCOOOMEEE " + clientName + "\nTo exit type: quit\n=-=-=-=-=-=-=-=-=-=-=-=-");
+                openingMessage.println("=-=-=-=-=-=-=-=-=-=-=-=-\nWELCOOOMEEE " + clientName + "\nTo exit type: /quit\n=-=-=-=-=-=-=-=-=-=-=-=-");
             }
 
 
@@ -85,7 +92,7 @@ public class Server {
                 //receive and print data from client
                 while (clientText != null) {
 
-                    if (clientText.equals("quit")) {
+                    if (clientText.equals("/quit")) {
                         System.out.println(clientName + " Disconnected");
                         for (PrintWriter client : clients) {
                             client.println(clientName + " Disconnected");
@@ -100,7 +107,11 @@ public class Server {
                     //Print a client message to all clients
                     synchronized (clients) {
                         for (PrintWriter client : clients) {
-                            client.println(clientName + " --> " + clientText);
+                            if (clientText.equals("/quit")) {
+                                break;
+                            } else {
+                                client.println(clientName + " --> " + clientText);
+                            }
                         }
                     }
 
